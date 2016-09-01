@@ -37,13 +37,22 @@ static JJSwipePasswordData *__g_userPrivateInfo__;
     __g_userPrivateInfo__ = pwdData;
 }
 
+- (id)init
+{
+    if (self = [super init]) {
+        self.showLineGesture = YES;
+    }
+    return self;
+}
+
 ///这个函数 自己用别的开源库 替换吧  就不引入了
 - (NSDictionary *)jsonDictionary
 {
     return @{@"type":@(_type),
              @"password":_password ?:@"",
              @"failedCounter":@(_failedCounter),
-             @"password":_lastModifyDate ?:@"",};
+             @"password":_lastModifyDate ?:@"",
+             @"showLineGesture":@(_showLineGesture)};
 }
 
 
@@ -81,6 +90,7 @@ static JJSwipePasswordData *__g_userPrivateInfo__;
     pwdData.password =  dic[@"password"];
     pwdData.failedCounter =  [dic[@"failedCounter"] integerValue];
     pwdData.lastModifyDate = dic[@"lastModifyDate"];
+    pwdData.showLineGesture = [dic[@"showLineGesture"] integerValue];
     
     return pwdData;//[LoginVIPInf objectWithKeyValues:dic];
 }

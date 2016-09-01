@@ -27,6 +27,9 @@ typedef NS_ENUM(NSUInteger, JJSwipePasswordType) {
 ///上次修改的时间
 @property (nonatomic,strong,readonly) NSDate *lastModifyDate;
 
+///是否显示手势线条 default YES
+@property (nonatomic,assign) BOOL showLineGesture;
+
 - (void)save;
 
 @end
