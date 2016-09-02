@@ -10,7 +10,6 @@
 
 @interface BaseView : UIView
 
-//子类必须重载
 + (id)xibView;
 
 + (id)xibViewWithNibName:(NSString *)nibName;

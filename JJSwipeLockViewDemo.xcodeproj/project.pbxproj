@@ -25,6 +25,7 @@
 		954CC4291D77C7FE00C1E679 /* JJSwipeMainView.m in Sources */ = {isa = PBXBuildFile; fileRef = 954CC4261D77C7FE00C1E679 /* JJSwipeMainView.m */; };
 		954CC42B1D77C81600C1E679 /* JJSwipeMainView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 954CC42A1D77C81600C1E679 /* JJSwipeMainView.xib */; };
 		954CC4321D78412900C1E679 /* JJSwipePasswordData.m in Sources */ = {isa = PBXBuildFile; fileRef = 954CC4311D78412900C1E679 /* JJSwipePasswordData.m */; };
+		95F9813B1D7906C30035D45F /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 95F9813A1D7906C30035D45F /* README.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -72,6 +73,7 @@
 		954CC42C1D77D70600C1E679 /* JJSwipeHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JJSwipeHeader.h; sourceTree = "<group>"; };
 		954CC4301D78412900C1E679 /* JJSwipePasswordData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JJSwipePasswordData.h; sourceTree = "<group>"; };
 		954CC4311D78412900C1E679 /* JJSwipePasswordData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JJSwipePasswordData.m; sourceTree = "<group>"; };
+		95F9813A1D7906C30035D45F /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,6 +97,7 @@
 		38D246241A8C66C600C0D615 = {
 			isa = PBXGroup;
 			children = (
+				95F9813A1D7906C30035D45F /* README.md */,
 				954CC41A1D77C66200C1E679 /* BaseView.h */,
 				954CC41B1D77C66200C1E679 /* BaseView.m */,
 				9526A3791D785414004496B2 /* AESDESCrypt */,
@@ -285,6 +288,7 @@
 				9526A3771D7853F4004496B2 /* main.m in Sources */,
 				9526A3871D785414004496B2 /* NSData+CommonCrypto.m in Sources */,
 				954CC4321D78412900C1E679 /* JJSwipePasswordData.m in Sources */,
+				95F9813B1D7906C30035D45F /* README.md in Sources */,
 				9526A3721D7853F4004496B2 /* AppDelegate.m in Sources */,
 				9526A3851D785414004496B2 /* AESDESCrypt.m in Sources */,
 			);
@@ -404,6 +408,7 @@
 				INFOPLIST_FILE = JJSwipeLockViewDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.xujun.JJSwipeLockViewDemo;
 				PRODUCT_NAME = JJSwipeLockViewDemo;
 			};
 			name = Debug;
@@ -415,6 +420,7 @@
 				INFOPLIST_FILE = JJSwipeLockViewDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.xujun.JJSwipeLockViewDemo;
 				PRODUCT_NAME = JJSwipeLockViewDemo;
 			};
 			name = Release;

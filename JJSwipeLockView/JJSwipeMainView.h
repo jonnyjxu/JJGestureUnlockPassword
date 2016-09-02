@@ -19,8 +19,6 @@
 
 @property (nonatomic, weak) IBOutlet UIImageView *imageView;
 
-@property (nonatomic, copy) NSString *password;
-
 @property (nonatomic, assign) id<JJSwipeMainViewDelegate> delegate;
 
 @end

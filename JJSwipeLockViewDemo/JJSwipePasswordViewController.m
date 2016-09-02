@@ -89,7 +89,7 @@ typedef NS_ENUM(NSUInteger, JJSwipeStepPassword) {
     UILabel *titleLabel = swipeView.titleLabel;
     ///这里要读写数据库
     if (self.failedCounter >= 10) {
-        titleLabel.text = @"SB 你都试了10次了...别想进应用了";
+        titleLabel.text = @"你都试了10次了...找回密码去吧";
         //TODO: 弹出框
         
         return JJSwipeLockStateWarning;

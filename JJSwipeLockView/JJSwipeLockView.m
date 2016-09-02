@@ -34,7 +34,7 @@
     self.nodeSelectedColor = [UIColor colorWithRed:0 green:170/255.0 blue:1 alpha:1];
     self.nodeWarningColor = [UIColor redColor];
     self.showLine = YES;
-    self.colCount = 3;
+    self.colCount = 10;
     
     
     CGFloat count = self.colCount*self.colCount;

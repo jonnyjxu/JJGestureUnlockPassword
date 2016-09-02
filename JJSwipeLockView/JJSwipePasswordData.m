@@ -11,7 +11,7 @@
 #import "AESDESCrypt.h"
 
 
-#define kLoginVIPInfoIdentifier @"com.xujun.loginVIPInfoIdentifier"
+#define kSwipePasswordDataIdentifier @"com.xujun.swipePasswordDataIdentifier"
 #define kSwipePasswordDataKey   @"SwipePasswordDataKey"
 
 static JJSwipePasswordData *__g_userPrivateInfo__;
@@ -26,7 +26,7 @@ static JJSwipePasswordData *__g_userPrivateInfo__;
     
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        __g_userPrivateInfo__ = [JJSwipePasswordData readLoginVIPInfo];
+        __g_userPrivateInfo__ = [JJSwipePasswordData readSwipePasswordData];
     });
     return __g_userPrivateInfo__;
 }
@@ -68,19 +68,19 @@ static JJSwipePasswordData *__g_userPrivateInfo__;
     
     NSData *data = [AESDESCrypt encryptWithJsonDictionary:self.jsonDictionary];
     
-    UICKeyChainStore *keyChain = [UICKeyChainStore keyChainStoreWithService:kLoginVIPInfoIdentifier];
+    UICKeyChainStore *keyChain = [UICKeyChainStore keyChainStoreWithService:kSwipePasswordDataIdentifier];
     [keyChain setData:data ? : [NSData new] forKey:kSwipePasswordDataKey];
 }
 
-+ (void)deleteLoginVIPInf
++ (void)deleteSwipePasswordData
 {
-    UICKeyChainStore *keyChain = [UICKeyChainStore keyChainStoreWithService:kLoginVIPInfoIdentifier];
+    UICKeyChainStore *keyChain = [UICKeyChainStore keyChainStoreWithService:kSwipePasswordDataIdentifier];
     [keyChain removeItemForKey:kSwipePasswordDataKey];
 }
 
-+ (JJSwipePasswordData *)readLoginVIPInfo
++ (JJSwipePasswordData *)readSwipePasswordData
 {
-    UICKeyChainStore *keyChain = [UICKeyChainStore keyChainStoreWithService:kLoginVIPInfoIdentifier];
+    UICKeyChainStore *keyChain = [UICKeyChainStore keyChainStoreWithService:kSwipePasswordDataIdentifier];
     NSData *data = [keyChain dataForKey:kSwipePasswordDataKey];
     NSDictionary *dic = [AESDESCrypt decryptWithJsonChiperData:data];
     

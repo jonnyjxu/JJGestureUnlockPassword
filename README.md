@@ -2,6 +2,12 @@
 a swipe password view to unlock an application written in objective-c
 
 <img src="example.gif"/>
+<img src="code1.png"/>
+<img src="SimulatorScreenShot1.png"/>
+<img src="SimulatorScreenShot2.png"/>
+<img src="SimulatorScreenShot3.png"/>
+
+
 ## Requirements
 
 JJSwipeLockView works on iOS 6.0 and later version and is compatible with ARC projects. It depends on the following Apple frameworks, which should already be included with most Xcode templates:
@@ -14,30 +20,21 @@ JJSwipeLockView works on iOS 6.0 and later version and is compatible with ARC pr
 ## Usage
 
  1. Copy the JJSwipeLockView folder to your project.
- 2. Add JJSwipeLockView as a subview wherever you want and set a delegate to this JJSwipeLockView.
+ 2. Add JJSwipeMainView as a subview wherever you want and set a delegate to this JJSwipeLockView.
 
 ```objective-c
+
+//JJSwipePasswordViewController
+
+JJSwipePasswordViewController *vc = [JJSwipePasswordViewController defaultViewControllerWithStyle:JJSwipePasswordStyleCreate];
+[self presentViewController:vc animated:YES completion:nil];
 		
-JJSwipeMainView *mainView = nil;
-
-if (self.style == JJSwipePasswordStyleLock) {
-    mainView = [JJSwipeMainView defaultMainViewWithNoNavigation];
-}
-else {
-    mainView = [JJSwipeMainView defaultMainViewWithNavigation];
-}
-
-mainView.delegate = self;
-
-[self.view addSubview:mainView];
-
-
     
 - (JJSwipeLockState)swipeView:(JJSwipeMainView *)swipeView didEndSwipeWithPassword:(NSString *)password
 {
-    //everytime user finish a swipe, this method get called and pass a password, add your logic here.
-    
+    //do something
 }
+
 ```
 ## License
 

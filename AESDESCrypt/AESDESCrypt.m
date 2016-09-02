@@ -12,7 +12,7 @@
 #import "NSString+Base64.h"
 #import "NSData+CommonCrypto.h"
 
-#define kAESDESCryptPasswordKey @"com.xujun.key@%$*#^*!(,.;;iOS"
+#define kAESDESCryptPasswordKey @"com.xujun.JJSwipeLockViewDemoKey"
 
 @implementation AESDESCrypt
 
