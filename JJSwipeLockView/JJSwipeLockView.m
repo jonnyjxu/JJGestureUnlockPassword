@@ -98,7 +98,6 @@
     }];
 }
 
-
 - (void)pan:(UIPanGestureRecognizer *)rec
 {
     if  (rec.state == UIGestureRecognizerStateBegan){
@@ -135,7 +134,6 @@
             self.viewState = JJSwipeLockStateSelected;
         }
     }
-    
 }
 
 - (BOOL)addSelectedNode:(JJSwipeLockNodeView *)nodeView
@@ -227,7 +225,12 @@
     }
 }
 
-- (void)layoutSubviews{
+- (void)layoutSubviews
+{
+    CGFloat min = MIN(self.bounds.size.width,self.bounds.size.height);
+    CGRect frame = self.frame;
+    frame.size = CGSizeMake(min, min);
+    self.frame = frame;
     
     self.polygonalLineLayer.frame = self.bounds;
     CAShapeLayer *maskLayer = [CAShapeLayer new];
@@ -240,7 +243,7 @@
     maskLayer.fillColor = [UIColor blackColor].CGColor;
     
     CGFloat gapCount = 0.5;
-    CGFloat min = MIN(self.bounds.size.width,self.bounds.size.height);
+
     CGFloat delta   = min / (self.colCount + (self.colCount - 1)*gapCount);
     
     //TODO: here should be more decent

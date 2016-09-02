@@ -39,6 +39,8 @@
 - (void)awakeFromNib
 {
     self.lockView.delegate = self;
+    self.imageView.layer.cornerRadius = CGRectGetWidth(self.imageView.frame)/2;
+    self.imageView.layer.masksToBounds = YES;
 }
 
 - (JJSwipeLockState)swipeView:(JJSwipeLockView *)swipeView didEndSwipeWithPassword:(NSString *)password

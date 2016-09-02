@@ -5,7 +5,6 @@ a swipe password view to unlock an application written in objective-c
 <img src="code1.png"/>
 <img src="SimulatorScreenShot1.png"/>
 <img src="SimulatorScreenShot2.png"/>
-<img src="SimulatorScreenShot3.png"/>
 
 
 ## Requirements
@@ -20,7 +19,7 @@ JJSwipeLockView works on iOS 6.0 and later version and is compatible with ARC pr
 ## Usage
 
  1. Copy the JJSwipeLockView folder to your project.
- 2. Add JJSwipeMainView as a subview wherever you want and set a delegate to this JJSwipeLockView.
+ 2. Add JJSwipeMainView as a subview wherever you want and set a delegate to this JJSwipeMainView.
 
 ```objective-c
 

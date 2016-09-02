@@ -60,6 +60,9 @@ typedef NS_ENUM(NSUInteger, JJSwipeStepPassword) {
     _failedCounter = [JJSwipePasswordData share].failedCounter;
     
     [self _setupMainView];
+    
+    [self _debugSetupCloseButton];
+    
 }
 
 - (void)_setupMainView
@@ -82,6 +85,19 @@ typedef NS_ENUM(NSUInteger, JJSwipeStepPassword) {
     
     ///首次更新步骤状态
     [self swipeView:mainView didEndSwipeWithPassword:nil];
+}
+
+
+- (void)_debugSetupCloseButton
+{
+#ifdef DEBUG
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
+    button.frame = CGRectMake(20, 20, 50, 30);
+    [button setTitle:@"关闭" forState:UIControlStateNormal];
+    [button addTarget:self action:@selector(dismiss) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:button];
+    
+#endif
 }
 
 - (JJSwipeLockState)_swipeView:(JJSwipeMainView *)swipeView didEndSwipeWithPassword:(NSString *)password
