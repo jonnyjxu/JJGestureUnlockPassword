@@ -10,6 +10,8 @@
 #import "JJSwipeLockNodeView.h"
 
 
+#define kUsePanGestureRecognizer 0
+
 @interface JJSwipeLockView()
 @property (nonatomic, strong) NSMutableArray *nodeArray;
 @property (nonatomic, strong) NSMutableArray *selectedNodeArray;
@@ -52,8 +54,10 @@
     _selectedNodeArray = [NSMutableArray arrayWithCapacity:count];
     _pointArray = [NSMutableArray array];
     
+#if kUsePanGestureRecognizer
     UIPanGestureRecognizer *panRec = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(pan:)];
     [self addGestureRecognizer:panRec];
+#endif
     self.viewState = JJSwipeLockStateNormal;
     [self cleanNodes];
 }
@@ -98,6 +102,44 @@
     }];
 }
 
+
+
+
+- (void)touchMoveAtPoint:(CGPoint)touchPoint
+{
+    NSInteger index = [self indexForNodeAtPoint:touchPoint];
+    if (index >= 0) {
+        JJSwipeLockNodeView *node = self.nodeArray[index];
+        
+        if (![self addSelectedNode:node]) {
+            [self moveLineWithFingerPosition:touchPoint];
+            
+        }
+    }else{
+        [self moveLineWithFingerPosition:touchPoint];
+        
+    }
+}
+
+- (void)endFingerTouch
+{
+    [self removeLastFingerPosition];
+    if([self.delegate respondsToSelector:@selector(swipeView:didEndSwipeWithPassword:)]){
+        NSMutableString *password = [NSMutableString new];
+        for(JJSwipeLockNodeView *nodeView in self.selectedNodeArray){
+            NSString *index = [@(nodeView.tag) stringValue];
+            [password appendString:index];
+        }
+        self.viewState = [self.delegate swipeView:self didEndSwipeWithPassword:password];
+        
+    }
+    else{
+        self.viewState = JJSwipeLockStateSelected;
+    }
+}
+
+#if kUsePanGestureRecognizer
+
 - (void)pan:(UIPanGestureRecognizer *)rec
 {
     if  (rec.state == UIGestureRecognizerStateBegan){
@@ -105,36 +147,38 @@
     }
     
     CGPoint touchPoint = [rec locationInView:self];
-    NSInteger index = [self indexForNodeAtPoint:touchPoint];
-    if (index >= 0) {
-        JJSwipeLockNodeView *node = self.nodeArray[index];
-        
-        if (![self addSelectedNode:node]) {
-            [self moveLineWithFingerPosition:touchPoint];
-
-        }
-    }else{
-        [self moveLineWithFingerPosition:touchPoint];
-        
-    }
+    [self touchMoveAtPoint:touchPoint];
     
     if (rec.state == UIGestureRecognizerStateEnded) {
+        [self endFingerTouch];
         
-        [self removeLastFingerPosition];
-        if([self.delegate respondsToSelector:@selector(swipeView:didEndSwipeWithPassword:)]){
-            NSMutableString *password = [NSMutableString new];
-            for(JJSwipeLockNodeView *nodeView in self.selectedNodeArray){
-                NSString *index = [@(nodeView.tag) stringValue];
-                [password appendString:index];
-            }
-            self.viewState = [self.delegate swipeView:self didEndSwipeWithPassword:password];
-            
-        }
-        else{
-            self.viewState = JJSwipeLockStateSelected;
-        }
     }
 }
+
+#else
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+{
+    [super touchesBegan:touches withEvent:event];
+    self.viewState = JJSwipeLockStateNormal;
+    [self touchMoveAtPoint:[touches.anyObject locationInView:self]];
+}
+
+- (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(nullable UIEvent *)event
+{
+    [super touchesMoved:touches withEvent:event];
+    [self touchMoveAtPoint:[touches.anyObject locationInView:self]];
+}
+- (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(nullable UIEvent *)event
+{
+    [super touchesEnded:touches withEvent:event];
+    [self endFingerTouch];
+}
+- (void)touchesCancelled:(nullable NSSet<UITouch *> *)touches withEvent:(nullable UIEvent *)event
+{
+    [super touchesCancelled:touches withEvent:event];
+    [self endFingerTouch];
+}
+#endif
 
 - (BOOL)addSelectedNode:(JJSwipeLockNodeView *)nodeView
 {
@@ -183,7 +227,7 @@
         self.polygonalLineLayer.path = self.polygonalLinePath.CGPath;
         
     }
-
+    
 }
 
 - (void)moveLineWithFingerPosition:(CGPoint)touchPoint
@@ -243,7 +287,7 @@
     maskLayer.fillColor = [UIColor blackColor].CGColor;
     
     CGFloat gapCount = 0.5;
-
+    
     CGFloat delta   = min / (self.colCount + (self.colCount - 1)*gapCount);
     
     //TODO: here should be more decent
@@ -316,29 +360,29 @@
 
 - (void)setViewState:(JJSwipeLockState)viewState
 {
-//    if(_viewState != viewState){
-        _viewState = viewState;
-        switch (_viewState){
-            case JJSwipeLockStateNormal:
-                [self cleanNodes];
-                break;
-            case JJSwipeLockStateWarning:
-                [self makeNodesToWarning];
-                [self performSelector:@selector(cleanNodesIfNeeded) withObject:nil afterDelay:1];
-                break;
-            case JJSwipeLockStateSelected:
-            default:
-                break;
-        }
-//    }
+    //    if(_viewState != viewState){
+    _viewState = viewState;
+    switch (_viewState){
+        case JJSwipeLockStateNormal:
+            [self cleanNodes];
+            break;
+        case JJSwipeLockStateWarning:
+            [self makeNodesToWarning];
+            [self performSelector:@selector(cleanNodesIfNeeded) withObject:nil afterDelay:1];
+            break;
+        case JJSwipeLockStateSelected:
+        default:
+            break;
+    }
+    //    }
 }
 
 /*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
-}
-*/
+ // Only override drawRect: if you perform custom drawing.
+ // An empty implementation adversely affects performance during animation.
+ - (void)drawRect:(CGRect)rect {
+ // Drawing code
+ }
+ */
 
 @end
