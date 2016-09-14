@@ -10,7 +10,6 @@
 		9526A3721D7853F4004496B2 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9526A3681D7853F4004496B2 /* AppDelegate.m */; };
 		9526A3731D7853F4004496B2 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9526A3691D7853F4004496B2 /* LaunchScreen.xib */; };
 		9526A3741D7853F4004496B2 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9526A36B1D7853F4004496B2 /* Images.xcassets */; };
-		9526A3751D7853F4004496B2 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9526A36C1D7853F4004496B2 /* Info.plist */; };
 		9526A3761D7853F4004496B2 /* JJSwipePasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9526A36E1D7853F4004496B2 /* JJSwipePasswordViewController.m */; };
 		9526A3771D7853F4004496B2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9526A36F1D7853F4004496B2 /* main.m */; };
 		9526A3781D7853F4004496B2 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9526A3711D7853F4004496B2 /* ViewController.m */; };
@@ -25,7 +24,6 @@
 		954CC4291D77C7FE00C1E679 /* JJSwipeMainView.m in Sources */ = {isa = PBXBuildFile; fileRef = 954CC4261D77C7FE00C1E679 /* JJSwipeMainView.m */; };
 		954CC42B1D77C81600C1E679 /* JJSwipeMainView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 954CC42A1D77C81600C1E679 /* JJSwipeMainView.xib */; };
 		954CC4321D78412900C1E679 /* JJSwipePasswordData.m in Sources */ = {isa = PBXBuildFile; fileRef = 954CC4311D78412900C1E679 /* JJSwipePasswordData.m */; };
-		95F9813B1D7906C30035D45F /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 95F9813A1D7906C30035D45F /* README.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -257,7 +255,6 @@
 			files = (
 				9526A3731D7853F4004496B2 /* LaunchScreen.xib in Resources */,
 				9526A3741D7853F4004496B2 /* Images.xcassets in Resources */,
-				9526A3751D7853F4004496B2 /* Info.plist in Resources */,
 				954CC42B1D77C81600C1E679 /* JJSwipeMainView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -288,7 +285,6 @@
 				9526A3771D7853F4004496B2 /* main.m in Sources */,
 				9526A3871D785414004496B2 /* NSData+CommonCrypto.m in Sources */,
 				954CC4321D78412900C1E679 /* JJSwipePasswordData.m in Sources */,
-				95F9813B1D7906C30035D45F /* README.md in Sources */,
 				9526A3721D7853F4004496B2 /* AppDelegate.m in Sources */,
 				9526A3851D785414004496B2 /* AESDESCrypt.m in Sources */,
 			);
