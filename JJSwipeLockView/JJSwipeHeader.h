@@ -42,7 +42,7 @@ typedef NS_ENUM(NSUInteger, JJFingerSwipeStyle) {
 
 #define kJJSwipeLockViewPasswordSep @"#"
 
-NSArray *JJSwipePasswordArray(NSString *password)
+static inline NSArray *JJSwipePasswordArray(NSString *password)
 {
     return [password componentsSeparatedByString:kJJSwipeLockViewPasswordSep];
 }
