@@ -9,7 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "JJSwipeHeader.h"
 
-#define kJJSwipeLockViewPasswordSep @"#"
 
 @protocol JJSwipeLockViewDelegate;
 

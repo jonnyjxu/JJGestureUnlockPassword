@@ -27,5 +27,24 @@ typedef NS_ENUM(NSUInteger, JJSwipePasswordStyle) {
     JJSwipePasswordStyleLock,
 };
 
+typedef NS_ENUM(NSUInteger, JJFingerSwipeStyle) {
+    ///验证录入指纹
+    JJFingerSwipeStyleFingerCreate,
+    ///锁屏指纹解锁
+    JJFingerSwipeStyleFingerVerify,
+    
+    ///创建手势密码
+    JJFingerSwipeStyleSwipeCreate,
+    ///验证手势密码
+    JJFingerSwipeStyleSwipeVerify,
+};
+
+
+#define kJJSwipeLockViewPasswordSep @"#"
+
+NSArray *JJSwipePasswordArray(NSString *password)
+{
+    return [password componentsSeparatedByString:kJJSwipeLockViewPasswordSep];
+}
 
 #endif /* JJSwipeHeader_h */
