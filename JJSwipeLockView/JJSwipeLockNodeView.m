@@ -49,39 +49,65 @@
     }
 }
 
+- (void)setNodeColor:(UIColor *)nodeColor
+{
+    _nodeColor = nodeColor;
+    self.nodeViewStatus = _nodeViewStatus;
+}
+
+- (void)setNodeSelectedColor:(UIColor *)nodeSelectedColor
+{
+    _nodeSelectedColor = nodeSelectedColor;
+    self.nodeViewStatus = _nodeViewStatus;
+}
+
+- (void)setNodeWarningColor:(UIColor *)nodeWarningColor
+{
+    _nodeWarningColor = nodeWarningColor;
+    self.nodeViewStatus = _nodeViewStatus;
+}
+
+- (void)setInnerCircleScale:(CGFloat)innerCircleScale
+{
+    _innerCircleScale = innerCircleScale;
+    [self setNeedsLayout];
+}
+
 - (void)setStatusToNormal
 {
     self.outlineLayer.lineWidth = 1;
-    self.outlineLayer.strokeColor = self.nodeColor.CGColor;
+    self.outlineLayer.strokeColor = _nodeColor.CGColor;
     self.innerCircleLayer.lineWidth = 1;
     self.innerCircleLayer.fillColor = [UIColor clearColor].CGColor;
 }
 
 - (void)setStatusToSelected
 {
-    self.outlineLayer.lineWidth = 2;
-    self.outlineLayer.strokeColor = self.nodeSelectedColor.CGColor;
-    self.innerCircleLayer.lineWidth = 2;
-    self.innerCircleLayer.fillColor = self.nodeSelectedColor.CGColor;
+    self.outlineLayer.lineWidth = 1;
+    self.outlineLayer.strokeColor = _nodeSelectedColor.CGColor;
+    self.innerCircleLayer.lineWidth = 1;
+    self.innerCircleLayer.fillColor = _nodeSelectedColor.CGColor;
 }
 
 - (void)setStatusToWarning
 {
-    self.outlineLayer.lineWidth = 2;
-    self.outlineLayer.strokeColor = self.nodeWarningColor.CGColor;
-    self.innerCircleLayer.lineWidth = 2;
-    self.innerCircleLayer.fillColor = self.nodeWarningColor.CGColor;
+    self.outlineLayer.lineWidth = 1 ;
+    self.outlineLayer.strokeColor = _nodeWarningColor.CGColor;
+    self.innerCircleLayer.lineWidth = 1;
+    self.innerCircleLayer.fillColor = _nodeWarningColor.CGColor;
 }
 
 
 - (void)layoutSubviews
 {
+    [super layoutSubviews];
+    
     self.outlineLayer.frame = self.bounds;
     UIBezierPath *outlinePath = [UIBezierPath bezierPathWithOvalInRect:self.bounds];
     self.outlineLayer.path = outlinePath.CGPath;
     
     CGRect frame = self.bounds;
-    CGFloat width = frame.size.width / 4;
+    CGFloat width = _innerCircleScale > 0 ? (frame.size.width*(1-MIN(_innerCircleScale, 1))) : frame.size.width / 3;
     self.innerCircleLayer.frame = CGRectInset(frame, width, width);
     UIBezierPath *innerPath = [UIBezierPath bezierPathWithOvalInRect:self.innerCircleLayer.bounds];
     self.innerCircleLayer.path = innerPath.CGPath;

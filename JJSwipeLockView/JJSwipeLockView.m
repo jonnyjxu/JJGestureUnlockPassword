@@ -9,15 +9,15 @@
 #import "JJSwipeLockView.h"
 #import "JJSwipeLockNodeView.h"
 
-
 #define kUsePanGestureRecognizer 0
 
+
 @interface JJSwipeLockView()
-@property (nonatomic, strong) NSMutableArray *nodeArray;
-@property (nonatomic, strong) NSMutableArray *selectedNodeArray;
+@property (nonatomic, strong) NSMutableArray<JJSwipeLockNodeView *> *nodeArray;
+@property (nonatomic, strong) NSMutableArray<JJSwipeLockNodeView *> *selectedNodeArray;
 @property (nonatomic, strong) CAShapeLayer *polygonalLineLayer;
 @property (nonatomic, strong) UIBezierPath *polygonalLinePath;
-@property (nonatomic, strong) NSMutableArray *pointArray;
+@property (nonatomic, strong) NSMutableArray<NSValue *> *pointArray;
 
 @property (nonatomic) JJSwipeLockState viewState;
 ///行数 默认3
@@ -31,28 +31,24 @@
 - (void)initliazer
 {
     [self.layer addSublayer:self.polygonalLineLayer];
-    
-    self.nodeColor = [UIColor colorWithRed:0 green:170/255.0 blue:1 alpha:1];
-    self.nodeSelectedColor = [UIColor colorWithRed:0 green:170/255.0 blue:1 alpha:1];
-    self.nodeWarningColor = [UIColor redColor];
-    self.showLine = YES;
-    self.colCount = 3;
-    
-    
+
+    _colCount = 3;
     CGFloat count = self.colCount*self.colCount;
     _nodeArray = [NSMutableArray arrayWithCapacity:count];
-    for (int i = 0; i < count; ++i) {
+    for (int i = 1; i <= count; ++i) {
         JJSwipeLockNodeView *nodeView = [JJSwipeLockNodeView new];
-        nodeView.nodeColor = self.nodeColor;
-        nodeView.nodeSelectedColor = self.nodeSelectedColor;
-        nodeView.nodeWarningColor = self.nodeWarningColor;
-        
         [_nodeArray addObject:nodeView];
         nodeView.tag = i;
         [self addSubview:nodeView];
     }
+    
     _selectedNodeArray = [NSMutableArray arrayWithCapacity:count];
     _pointArray = [NSMutableArray array];
+    
+    _showLine = YES;
+    self.nodeColor = [UIColor colorWithRed:0 green:170/255.0 blue:1 alpha:1];
+    self.nodeSelectedColor = [UIColor colorWithRed:0 green:170/255.0 blue:1 alpha:1];
+    self.nodeWarningColor = [UIColor redColor];
     
 #if kUsePanGestureRecognizer
     UIPanGestureRecognizer *panRec = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(pan:)];
@@ -60,6 +56,9 @@
 #endif
     self.viewState = JJSwipeLockStateNormal;
     [self cleanNodes];
+    
+
+//    [self setLockPassword:@"2#4#5"];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder
@@ -77,11 +76,11 @@
     }
     return self;
 }
-
+#pragma mark - 设置项
 - (void)setNodeColor:(UIColor *)nodeColor
 {
     _nodeColor = nodeColor;
-    [self.nodeArray enumerateObjectsUsingBlock:^(JJSwipeLockNodeView *obj, NSUInteger idx, BOOL *stop) {
+    [_nodeArray enumerateObjectsUsingBlock:^(JJSwipeLockNodeView *obj, NSUInteger idx, BOOL *stop) {
         obj.nodeColor = nodeColor;
     }];
 }
@@ -89,49 +88,106 @@
 - (void)setNodeSelectedColor:(UIColor *)nodeSelectedColor
 {
     _nodeSelectedColor = nodeSelectedColor;
-    [self.nodeArray enumerateObjectsUsingBlock:^(JJSwipeLockNodeView *obj, NSUInteger idx, BOOL *stop) {
+    [_nodeArray enumerateObjectsUsingBlock:^(JJSwipeLockNodeView *obj, NSUInteger idx, BOOL *stop) {
         obj.nodeSelectedColor = nodeSelectedColor;
     }];
+    self.viewState = _viewState;
 }
 
-- (void)setnodeWarningColor:(UIColor *)nodeWarningColor
+- (void)setNodeWarningColor:(UIColor *)nodeWarningColor
 {
     _nodeWarningColor = nodeWarningColor;
-    [self.nodeArray enumerateObjectsUsingBlock:^(JJSwipeLockNodeView *obj, NSUInteger idx, BOOL *stop) {
+    [_nodeArray enumerateObjectsUsingBlock:^(JJSwipeLockNodeView *obj, NSUInteger idx, BOOL *stop) {
         obj.nodeWarningColor = nodeWarningColor;
     }];
 }
 
+- (void)setInnerCircleScale:(CGFloat)innerCircleScale
+{
+    _innerCircleScale = innerCircleScale;
+    [_nodeArray enumerateObjectsUsingBlock:^(JJSwipeLockNodeView *obj, NSUInteger idx, BOOL *stop) {
+        obj.innerCircleScale = innerCircleScale;
+    }];
+}
 
+#pragma mark - 密码
 
+- (NSString *)lockPassword
+{
+    return [self lockPasswordWithSep:kJJSwipeLockViewPasswordSep];
+}
 
+- (NSString *)lockPasswordWithSep:(NSString *)sep
+{
+    NSMutableArray *pwdAray = [NSMutableArray new];
+    for(JJSwipeLockNodeView *nodeView in self.selectedNodeArray){
+        NSString *index = [@(nodeView.tag) stringValue];
+        [pwdAray addObject:index];
+    }
+    return [pwdAray componentsJoinedByString:sep?:@""];
+}
+
+- (void)setLockPassword:(NSString *)lockPassword
+{
+    if (self.frame.size.width == 0 || self.frame.size.height == 0) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self _setLockPassword:lockPassword];
+        });
+    }
+    else {
+        [self _setLockPassword:lockPassword];
+    }
+}
+
+- (void)_setLockPassword:(NSString *)lockPassword
+{
+    [self cleanNodes];
+    NSArray *pwdArray = [lockPassword componentsSeparatedByString:kJJSwipeLockViewPasswordSep];
+    for (NSString *pwd in pwdArray) {
+        NSInteger tag = pwd.integerValue;
+        JJSwipeLockNodeView *view = [self findJJSwipeLockNodeViewTag:tag];
+        [self addSelectedNode:view needDeleteLastLine:NO];
+    }
+}
+
+///暂时不用 viewTag:  防止后期会增加View 导致问题
+- (JJSwipeLockNodeView *)findJJSwipeLockNodeViewTag:(NSInteger)tag
+{
+    __block JJSwipeLockNodeView *view = nil;
+    [_nodeArray enumerateObjectsUsingBlock:^(JJSwipeLockNodeView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (obj.tag == tag) {
+            view = obj;
+            *stop = YES;
+        }
+    }];
+    return view;
+}
+
+#pragma mark - 手势
 - (void)touchMoveAtPoint:(CGPoint)touchPoint
 {
     NSInteger index = [self indexForNodeAtPoint:touchPoint];
     if (index >= 0) {
         JJSwipeLockNodeView *node = self.nodeArray[index];
         
-        if (![self addSelectedNode:node]) {
+        if (![self addSelectedNode:node needDeleteLastLine:YES]) {
             [self moveLineWithFingerPosition:touchPoint];
-            
         }
-    }else{
+    }
+    else {
         [self moveLineWithFingerPosition:touchPoint];
-        
+    }
+    
+    if([_delegate respondsToSelector:@selector(swipeView:didSwipingWithPassword:)]){
+        [_delegate swipeView:self didSwipingWithPassword:self.lockPassword];
     }
 }
 
 - (void)endFingerTouch
 {
     [self removeLastFingerPosition];
-    if([self.delegate respondsToSelector:@selector(swipeView:didEndSwipeWithPassword:)]){
-        NSMutableString *password = [NSMutableString new];
-        for(JJSwipeLockNodeView *nodeView in self.selectedNodeArray){
-            NSString *index = [@(nodeView.tag) stringValue];
-            [password appendString:index];
-        }
-        self.viewState = [self.delegate swipeView:self didEndSwipeWithPassword:password];
-        
+    if([_delegate respondsToSelector:@selector(swipeView:didEndSwipeWithPassword:)]){
+        self.viewState = [_delegate swipeView:self didEndSwipeWithPassword:self.lockPassword];
     }
     else{
         self.viewState = JJSwipeLockStateSelected;
@@ -151,8 +207,8 @@
     
     if (rec.state == UIGestureRecognizerStateEnded) {
         [self endFingerTouch];
-        
     }
+    
 }
 
 #else
@@ -180,13 +236,13 @@
 }
 #endif
 
-- (BOOL)addSelectedNode:(JJSwipeLockNodeView *)nodeView
+- (BOOL)addSelectedNode:(JJSwipeLockNodeView *)nodeView needDeleteLastLine:(BOOL)needDeleteLastLine
 {
-    if (![self.selectedNodeArray containsObject:nodeView]) {
+    if (nodeView && ![self.selectedNodeArray containsObject:nodeView]) {
         nodeView.nodeViewStatus = JJSwipeLockStateSelected;
         [self.selectedNodeArray addObject:nodeView];
         
-        [self addLineToNode:nodeView];
+        [self addLineToNode:nodeView needDeleteLastLine:needDeleteLastLine];
         
         return YES;
     }else{
@@ -195,7 +251,7 @@
     
 }
 
-- (void)addLineToNode:(JJSwipeLockNodeView *)nodeView
+- (void)addLineToNode:(JJSwipeLockNodeView *)nodeView needDeleteLastLine:(BOOL)needDeleteLastLine
 {
     if (!self.showLine) {
         return;
@@ -212,7 +268,10 @@
     }else{
         
         //path add line to point
-        [self.pointArray removeLastObject];
+        if (needDeleteLastLine) {
+            [self.pointArray removeLastObject];
+        }
+        
         CGPoint middlePoint = nodeView.center;
         [self.pointArray addObject:[NSValue valueWithCGPoint:middlePoint]];
         
@@ -227,7 +286,7 @@
         self.polygonalLineLayer.path = self.polygonalLinePath.CGPath;
         
     }
-    
+
 }
 
 - (void)moveLineWithFingerPosition:(CGPoint)touchPoint
@@ -246,7 +305,6 @@
             [self.polygonalLinePath addLineToPoint:middlePoint];
         }
         self.polygonalLineLayer.path = self.polygonalLinePath.CGPath;
-        
     }
 }
 
@@ -271,6 +329,8 @@
 
 - (void)layoutSubviews
 {
+    [super layoutSubviews];
+    
     CGFloat min = MIN(self.bounds.size.width,self.bounds.size.height);
     CGRect frame = self.frame;
     frame.size = CGSizeMake(min, min);
@@ -287,7 +347,7 @@
     maskLayer.fillColor = [UIColor blackColor].CGColor;
     
     CGFloat gapCount = 0.5;
-    
+
     CGFloat delta   = min / (self.colCount + (self.colCount - 1)*gapCount);
     
     //TODO: here should be more decent
@@ -360,29 +420,22 @@
 
 - (void)setViewState:(JJSwipeLockState)viewState
 {
-    //    if(_viewState != viewState){
-    _viewState = viewState;
-    switch (_viewState){
-        case JJSwipeLockStateNormal:
-            [self cleanNodes];
-            break;
-        case JJSwipeLockStateWarning:
-            [self makeNodesToWarning];
-            [self performSelector:@selector(cleanNodesIfNeeded) withObject:nil afterDelay:1];
-            break;
-        case JJSwipeLockStateSelected:
-        default:
-            break;
-    }
-    //    }
+//    if(_viewState != viewState){
+        _viewState = viewState;
+        switch (_viewState){
+            case JJSwipeLockStateNormal:
+                [self cleanNodes];
+                break;
+            case JJSwipeLockStateWarning:
+                [self makeNodesToWarning];
+                [self performSelector:@selector(cleanNodesIfNeeded) withObject:nil afterDelay:1];
+                break;
+            case JJSwipeLockStateSelected:
+            default:
+                break;
+        }
+//    }
 }
 
-/*
- // Only override drawRect: if you perform custom drawing.
- // An empty implementation adversely affects performance during animation.
- - (void)drawRect:(CGRect)rect {
- // Drawing code
- }
- */
 
 @end
